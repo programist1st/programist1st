@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>GitHub Repository Interface</h1>
+    <div class="input-group">
+        <label for="repo-url">Enter GitHub Repository URL</label>
+        <input type="text" id="repo-url" placeholder="e.g., https://github.com/yourname/yourrepo">
+    </div>
+    <button class="btn" onclick="cloneRepo()">Clone Repository</button>
+    <div class="output" id="output"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    function cloneRepo() {
+        const repoUrl = document.getElementById('repo-url').value;
+        const outputDiv = document.getElementById('output');
+        
+        if (repoUrl) {
+            axios.get(`https://api.github.com/repos/${repoUrl.split('github.com/')[1]}`)
+                .then(response => {
+                    outputDiv.innerHTML = `<p><strong>Repository:</strong> ${response.data.name}</p>
+                                           <p><strong>Description:</strong> ${response.data.description}</p>
+                                           <p><strong>Clone URL:</strong> <a href="${response.data.clone_url}" target="_blank">${response.data.clone_url}</a></p>`;
+                })
+                .catch(error => {
+                    outputDiv.innerHTML = `<p style="color: red;">Error: Unable to fetch repository details. Please check the URL.</p>`;
+                });
+        } else {
+            outputDiv.innerHTML = `<p style="color: red;">Please enter a valid GitHub repository URL.</p>`;
+        }
+    }
+</script>
+
+</body>
+</html>
+
